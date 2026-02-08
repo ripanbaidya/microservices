@@ -16,7 +16,6 @@ services:
       file: common-config.yml
       service: network-deploy-service
 
-  # config server
   configserver:
     image: "ripanbaidya/configserver:s6"
     container_name: configserver
@@ -81,5 +80,5 @@ services:
       service: microservice-configserver-config
 
 networks:
-  easybank:
+  eazybank:
     driver: bridge

@@ -2,14 +2,13 @@
 # compose file, It's a industry standard, with these we don't have to write repetitive lines in the
 # docker compose file
 services:
-  # network related services
   network-deploy-service:
     networks:
       - eazybank
 
   microservice-base-config:
     extends:
-      services: network-deploy-service
+      service: network-deploy-service
     deploy:
       resources:
         limits:
