@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: configserver
+
+  profiles:
+    # Use 'native' profile while reading properties from classpath or file
+    # active: native
+
+    # Use git profile while reading properties from GitHub
+    active: "git"
+
+  cloud:
+    config:
+      server:
+        # native:
+          # 1. Reading config files from the classpath
+          # search-locations: "classpath:/config"
+
+          # 2. Reading config files from the file location
+          # search-locations: "file:/Users/ripanbaidya/Documents/config"
+
+        git:
+          # 3. Reading config from GitHub
+          uri: "https://github.com/ripan-baidya/config.git" # URI of remote repository
+          timeout: 5 # Timeout for obtaining HTTP or SSH connection, in seconds
+          default-label: main  # Default label or branch to use with remote repository
+          clone-on-start: true # Indicate whether to clone the repository on startup
+          force-pull: true     # Indicate whether to force pull the repository on startup
+
+  # We want to use GitHub webhook feature to push changes to the config server, behind the scene rabbitmq will
+  # be used as a message broker to notify the config server about the changes
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# Expose all endpoints - health, refresh, bus and so on.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  # Enabling the health (readiness and liveness) endpoint to enable readiness or liveness of the application
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  # Enable probes
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+server:
+  port: 8071
+
+# Encrypting sensitive information like passwords before storing them in a GitHub repository is crucial for maintaining security.
+# Here are some considerations:
+# 1. Security First: Encrypting properties protects sensitive data from unauthorized access, ensuring that even if someone gains
+# access to your repository, they won't easily see sensitive details.
+# 2. Usage of Spring Cloud Config Server: The config server allows dynamic encryption and decryption of properties using a secret
+# key defined in your configuration (application.yml). This enhances security while simplifying access to configuration values.
+encrypt:
+  key: "45D81EC1EF61DF9AD8D3E5BB397F9"
