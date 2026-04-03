@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: eurekaserver
+  config:
+    import: optional:configserver:http://localhost:8071/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      # Show details information instead of showing just "UP" or "DOWN"
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+
+
