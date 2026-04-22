@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: gatewayserver
+  config:
+    import: optional:configserver:http://localhost:8071/
+
+  # to set up gateway config above version 3.4.* we need to follow this kind of property
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # If we don't write any custom routing configuration then the gateway will have its
+          # own default route configuration which we can check
+          # at http://localhost:{PORT_OF_GATEWAY_SERVER}/actuator/gateway/routes
+          # If, we want our own custom routes then we need to disable this by setting it false
+          enabled: false
+          # by default service id is in uppercase, so if we want to accept service id in lowercase
+          # then we need to set this property to true
+          lower-case-service-id: true
+      # global configuration for all routes
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: gatewayserver
+    description: Gateway Server for Microservices
+    version: 1.0.0
+
+logging:
+  level:
+    com.eazybytes.gatewayserver: debug
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        permitted-number-of-calls-in-half-open-state: 2
+        failure-rate-threshold: 50.0 # 50%
+        wait-duration-in-open-state: 10000 # 10s
