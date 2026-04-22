@@ -1,0 +1,16 @@
+server:
+  port: 9010
+
+spring:
+  application:
+    name: "message"
+
+  # We are using spring cloud function to send emails and sms messages, and we have added dependency
+  # spring-cloud-starter-function-web this will enable the rest api for the function.
+  # I have two functions email and sms. here we have defined the function definition "email|sms" which means
+  # the 'web' will exponse another endpoint http:/localhost:9010/functions/emailsms where both api will be invoked
+  # we have defined our api in such a way so that the output of email can use as input for sms.
+  # Note: to merge the more than one api in one endpoint, we use pipe symbol "|"
+  cloud:
+    function:
+      definition: email|sms
